@@ -6,21 +6,24 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:07:34 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/03 21:38:56 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/04 14:20:25 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h> //TODO удалить
 #include "pipex.h"
 
-int main (int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
+	t_path	*path;
+
 	(void) argc;
 	(void) argv;
-	while (*envp)
+	path = get_path(envp);
+	while (path)
 	{
-		printf("%s\n", *envp);
-		envp++;
+		printf("%s\n", path->value);
+		path = path->next;
 	}
 	
 }

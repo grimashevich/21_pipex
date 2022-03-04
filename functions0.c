@@ -6,11 +6,11 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 21:39:19 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/03 22:01:04 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/04 13:18:44 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pipex.h>
+#include "pipex.h"
 
 char	*ft_strdup(const char *s1)
 {
@@ -39,4 +39,21 @@ int	ft_strlen(const char *s)
 	while (*(s++) != 0)
 		result++;
 	return (result);
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*tmp;
+
+	tmp = malloc(count * size);
+	if (tmp == 0)
+		return (0);
+	ft_bzero(tmp, count * size);
+	return (tmp);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	while (n)
+		((char *) s)[(n--) - 1] = 0;
 }

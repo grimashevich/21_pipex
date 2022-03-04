@@ -12,7 +12,8 @@ CFLAGS := -Wall -Wextra -Werror -g
 # LDLIBS := -lft
 S_FLAGS := -fsanitize=address
 				
-SRC :=		main.c				functions0.c		ft_split.c			ft_strncmp.c
+SRC :=		main.c				functions0.c		ft_split.c			ft_strncmp.c	\
+			f_path0.c
 
 OBJ := $(SRC:%.c=$(OBJ_DIR)/%.o)
 # OBJ_B := $(SRC_B:%.c=$(OBJ_DIR)/%.o)
