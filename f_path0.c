@@ -6,19 +6,19 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 21:39:19 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/04 14:21:58 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/04 19:02:12 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 
-void	free_path(t_path **path)
+void	free_str_list(t_str **str_list)
 {
-	t_path	*cur_item;
-	t_path	*prev_item;
+	t_str	*cur_item;
+	t_str	*prev_item;
 
-	cur_item = *path;
+	cur_item = *str_list;
 	while (cur_item)
 	{
 		prev_item = cur_item;
@@ -26,16 +26,16 @@ void	free_path(t_path **path)
 		free(prev_item->value);
 		free(prev_item);
 	}
-	*path = NULL;
+	*str_list = NULL;
 }
 
-t_path	*create_path_item(char *value)
+t_str	*create_str_item(char *value)
 {
-	t_path	*result;
+	t_str	*result;
 
 	if (! value)
 		return (NULL);
-	result = malloc(sizeof(t_path));
+	result = malloc(sizeof(t_str));
 	if (! result)
 		return (NULL);
 	result->next = NULL;
@@ -48,9 +48,9 @@ t_path	*create_path_item(char *value)
 	return (result);
 }
 
-t_path	*add_path_to_list(t_path *new_item, t_path *list_start)
+t_str	*add_str_to_list(t_str *new_item, t_str *list_start)
 {
-	t_path	*cur_item;
+	t_str	*cur_item;
 
 	if (new_item == NULL)
 		return (list_start);
@@ -63,11 +63,11 @@ t_path	*add_path_to_list(t_path *new_item, t_path *list_start)
 	return (list_start);
 }
 
-t_path	*get_path(char **envp)
+t_str	*get_path(char **envp)
 {
 	char	**path_var;
 	char	**path_vars;
-	t_path	*result;
+	t_str	*result;
 
 	while (*envp)
 	{
@@ -82,7 +82,7 @@ t_path	*get_path(char **envp)
 	result = NULL;
 	while (*path_var)
 	{
-		result = add_path_to_list(create_path_item(*path_var), result);
+		result = add_str_to_list(create_str_item(*path_var), result);
 		path_var++;
 	}
 	return (result);

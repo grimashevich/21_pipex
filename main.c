@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:07:34 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/04 14:20:25 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/04 19:02:12 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_path	*path;
+	t_str	*path;
 
 	(void) argc;
 	(void) argv;
@@ -25,5 +25,4 @@ int	main(int argc, char **argv, char **envp)
 		printf("%s\n", path->value);
 		path = path->next;
 	}
-	
 }
