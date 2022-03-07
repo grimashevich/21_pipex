@@ -10,10 +10,10 @@ CFLAGS := -Wall -Wextra -Werror -g
 # CPPFLAGS := -I$(LIBFT_DIR) -MMD
 # LDFLAGS := -L$(LIBFT_DIR)
 # LDLIBS := -lft
-S_FLAGS := -fsanitize=address
+# S_FLAGS := -fsanitize=address
 				
 SRC :=		main.c				functions0.c		ft_split.c			ft_strncmp.c	\
-			f_path0.c
+			f_path0.c			f_parse.c			fucntions1.c
 
 OBJ := $(SRC:%.c=$(OBJ_DIR)/%.o)
 # OBJ_B := $(SRC_B:%.c=$(OBJ_DIR)/%.o)
@@ -47,10 +47,10 @@ $(OBJ_DIR):
 
 clean:
 	@rm -f $(OBJ) $(DEP) $(OBJ_B) $(DEP_B)
-	make clean -C libft
+	# make clean -C libft
 
 fclean: clean
 	@rm -f $(NAME) $(NAME_B)
-	make fclean -C libft
+	# make fclean -C libft
 
 re: fclean all

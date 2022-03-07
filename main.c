@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:07:34 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/04 19:02:12 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/07 21:52:05 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,33 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_str	*path;
+	if (argc < 3)
+	{
+		printf("Error (argc < 3)\n");
+		return (1);
+	}
+	t_pipex	*ppx;
+	t_str	*path_tmp;
+	t_str	*cmd_tmp;
+
 
 	(void) argc;
 	(void) argv;
-	path = get_path(envp);
-	while (path)
+	(void) envp;
+	ppx = get_t_pipex(argc, argv, envp);
+	path_tmp = ppx->path;
+	while (path_tmp)
 	{
-		printf("%s\n", path->value);
-		path = path->next;
+		printf("%s\n", path_tmp->value);
+		path_tmp = path_tmp->next;
 	}
+	cmd_tmp = ppx->commands;
+	printf("- - - - - - - - - \n");
+	while (cmd_tmp)
+	{
+		printf("%s\n", cmd_tmp->value);
+		cmd_tmp = cmd_tmp->next;
+	}
+	clear_t_pipex(ppx);
+	return (0);
 }

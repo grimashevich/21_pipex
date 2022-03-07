@@ -6,30 +6,11 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 21:39:19 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/04 13:18:44 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/07 18:46:44 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-char	*ft_strdup(const char *s1)
-{
-	char	*result;
-	int		s1_size;
-	int		i;
-
-	s1_size = ft_strlen(s1) + 1;
-	i = 0;
-	result = malloc(s1_size);
-	if (! result)
-		return (NULL);
-	while (i < s1_size)
-	{
-		result[i] = s1[i];
-		i++;
-	}
-	return (result);
-}
 
 int	ft_strlen(const char *s)
 {
@@ -56,4 +37,23 @@ void	ft_bzero(void *s, size_t n)
 {
 	while (n)
 		((char *) s)[(n--) - 1] = 0;
+}
+
+char	*ft_strdup(const char *s1)
+{
+	char	*result;
+	int		s1_size;
+	int		i;
+
+	s1_size = ft_strlen(s1) + 1;
+	i = 0;
+	result = malloc(s1_size);
+	if (! result)
+		return (NULL);
+	while (i < s1_size)
+	{
+		result[i] = s1[i];
+		i++;
+	}
+	return (result);
 }

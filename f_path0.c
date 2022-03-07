@@ -6,12 +6,24 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 21:39:19 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/04 19:02:12 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/07 20:35:49 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+void	free_str_array(char **arr)
+{
+	char	**cur_str;
+
+	cur_str = arr;
+	while (*cur_str)
+	{
+		free(*cur_str);
+		cur_str++;
+	}
+	free(arr);	
+}
 
 void	free_str_list(t_str **str_list)
 {
@@ -29,7 +41,7 @@ void	free_str_list(t_str **str_list)
 	*str_list = NULL;
 }
 
-t_str	*create_str_item(char *value)
+t_str	*create_str_item(char *value, int need_dup)
 {
 	t_str	*result;
 
@@ -39,7 +51,10 @@ t_str	*create_str_item(char *value)
 	if (! result)
 		return (NULL);
 	result->next = NULL;
-	result->value = ft_strdup(value);
+	if (need_dup)
+		result->value = ft_strdup(value);
+	else
+		result->value = value;
 	if (! result->value)
 	{
 		free(result);
@@ -82,8 +97,10 @@ t_str	*get_path(char **envp)
 	result = NULL;
 	while (*path_var)
 	{
-		result = add_str_to_list(create_str_item(*path_var), result);
+		result = add_str_to_list(
+			create_str_item(ft_strjoin(*path_var, "/"), 0), result );
 		path_var++;
 	}
+	free_str_array(path_vars);
 	return (result);
 }
