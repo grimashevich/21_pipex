@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:07:34 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/07 21:52:05 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/08 19:19:05 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,44 @@ int	main(int argc, char **argv, char **envp)
 	t_str	*path_tmp;
 	t_str	*cmd_tmp;
 
-
-	(void) argc;
-	(void) argv;
-	(void) envp;
 	ppx = get_t_pipex(argc, argv, envp);
 	path_tmp = ppx->path;
+	(void) argc; (void) argv; (void) envp; //TODO DELETE
+
+
+	int child;
+	int pipe_fd[2];
+	char	*str = ft_strdup("ok");
+	char	*buffer;
+	int		read_count;
+
+	pipe(pipe_fd);
+	ppx->infile_fd = open(ppx->infile, O_RDONLY);
+	ppx->outfile_fd = open(ppx->outfile_fd, O_WRONLY);
+	buffer = malloc(128);
+
+	child = fork();
+	if (child != 0) //Parent
+	{
+		child = fork();
+		if (child != 0) //Parent
+		{
+
+		}
+		else //Child 2
+		{
+		}
+	}
+	else //Child 1
+	{
+		//TODO Останавился тут узнавать как работают STDIN и STDOUT
+		dup2(ppx->infile_fd, stdin);
+		dup2(pipe_fd, 0);
+		execve(ppx->commands->value, argv, envp);
+		
+	}	
+	return(0);
+	
 	while (path_tmp)
 	{
 		printf("%s\n", path_tmp->value);

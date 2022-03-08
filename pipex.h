@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 11:38:10 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/07 20:33:11 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/08 19:00:51 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h> //TODO DELETE
 # include <unistd.h>
 # include <stdlib.h>
+# include <fcntl.h>
 
 # define USLEEP_TIME 0
 
@@ -31,6 +32,8 @@ typedef struct pipex
 	char	*outfile;
 	t_str	*path;
 	t_str	*commands;
+	int		*infile_fd;
+	int		*outfile_fd;
 }	t_pipex;
 
 
