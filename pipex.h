@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 11:38:10 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/08 19:00:51 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/22 18:02:06 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,20 @@ typedef struct s_str
 	struct s_str	*next;
 }	t_str;
 
+typedef struct s_text
+{
+	char			**value;
+	struct s_text	*next;
+}	t_text;
+
 typedef struct pipex
 {
 	char	*infile;
 	char	*outfile;
 	t_str	*path;
-	t_str	*commands;
-	int		*infile_fd;
-	int		*outfile_fd;
+	t_text	*commands;
+	int		infile_fd;
+	int		outfile_fd;
 }	t_pipex;
 
 
@@ -51,5 +57,8 @@ void	cleat_t_pipex(t_pipex *ppx);
 t_pipex	*get_t_pipex(int argc, char **argv, char **envp);
 void	clear_t_pipex(t_pipex *ppx);
 char	*ft_strjoin(char const *s1, char const *s2);
+t_text	*add_text_to_list(t_text *new_item, t_text *list_start);
+void	free_text_list(t_text **str_list);
+t_text	*create_text_item(char *value);
 
 #endif

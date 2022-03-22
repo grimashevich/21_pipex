@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 12:48:18 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/08 16:01:18 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/22 18:02:31 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	clear_t_pipex(t_pipex *ppx)
 {
 	free(ppx->infile);
 	free(ppx->outfile);
-	free_str_list(&(ppx->commands));
+	free_text_list(&(ppx->commands));
 	free_str_list(&(ppx->path));
 	free(ppx);
 }
@@ -34,23 +34,23 @@ int	is_file_executable(char *dir, char *file)
 	return result;
 }
 
-int update_commands2(t_pipex *ppx, t_str *cur_cmd)
+int update_commands2(t_pipex *ppx, t_text *cur_cmd)
 {
 	char	*tmp;
 	t_str	*cur_path;
 	int		file_ok;
 
-	if (is_file_executable("", cur_cmd->value))
+	if (is_file_executable("", cur_cmd->value[0]))
 		return (1);
 	cur_path = ppx->path;
 	file_ok = 0;
 	while (cur_path)
 	{
-		if (is_file_executable(cur_path->value, cur_cmd->value))
+		if (is_file_executable(cur_path->value, cur_cmd->value[0]))
 		{
 			file_ok = 1;
-			tmp = cur_cmd->value;
-			cur_cmd->value = ft_strjoin(cur_path->value, cur_cmd->value);
+			tmp = cur_cmd->value[0];
+			cur_cmd->value[0] = ft_strjoin(cur_path->value, cur_cmd->value[0]);
 			free(tmp);
 			break;
 		}
@@ -61,7 +61,7 @@ int update_commands2(t_pipex *ppx, t_str *cur_cmd)
 
 int update_commands(t_pipex *ppx)
 {
-	t_str	*cur_cmd;
+	t_text	*cur_cmd;
 
 	cur_cmd = ppx->commands;
 	while (cur_cmd)
@@ -88,8 +88,8 @@ t_pipex	*get_t_pipex(int argc, char **argv, char **envp)
 	i = 2;
 	pipex->commands = NULL;
 	while (i < argc -1)
-		pipex->commands = add_str_to_list(
-			create_str_item(argv[i++], 1), pipex->commands);
+		pipex->commands = add_text_to_list(
+			create_text_item(argv[i++]), pipex->commands);
 	if (! update_commands(pipex))
 	{
 		clear_t_pipex(pipex);

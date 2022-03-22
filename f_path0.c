@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 21:39:19 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/07 20:35:49 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/22 17:04:57 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,29 @@ void	free_str_list(t_str **str_list)
 	*str_list = NULL;
 }
 
+void	free_text_list(t_text **str_list)
+{
+	t_text	*cur_item;
+	t_text	*prev_item;
+	char	**value;
+
+	cur_item = *str_list;
+	while (cur_item)
+	{
+		prev_item = cur_item;
+		cur_item = cur_item->next;
+		value = prev_item->value;
+		while (value)
+		{
+			free(*value);
+			value++;
+		}
+		free(prev_item->value);
+		free(prev_item);
+	}
+	*str_list = NULL;
+}
+
 t_str	*create_str_item(char *value, int need_dup)
 {
 	t_str	*result;
@@ -63,9 +86,43 @@ t_str	*create_str_item(char *value, int need_dup)
 	return (result);
 }
 
+t_text	*create_text_item(char *value)
+{
+	t_text	*result;
+
+	if (! value)
+		return (NULL);
+	result = malloc(sizeof(t_text));
+	if (! result)
+		return (NULL);
+	result->next = NULL;
+	result->value = ft_split(value, ' ');
+	if (! result->value)
+	{
+		free(result);
+		return (NULL);
+	}
+	return (result);
+}
+
 t_str	*add_str_to_list(t_str *new_item, t_str *list_start)
 {
 	t_str	*cur_item;
+
+	if (new_item == NULL)
+		return (list_start);
+	if (list_start == NULL)
+		return (new_item);
+	cur_item = list_start;
+	while (cur_item->next)
+		cur_item = cur_item->next;
+	cur_item->next = new_item;
+	return (list_start);
+}
+
+t_text	*add_text_to_list(t_text *new_item, t_text *list_start)
+{
+	t_text	*cur_item;
 
 	if (new_item == NULL)
 		return (list_start);

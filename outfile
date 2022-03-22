@@ -1,3 +1,4 @@
-str1
-str2
-str3
+drwxr-xr-x   9 eclown  4221    306 Mar 22 20:08 obj
+-rw-r--r--   1 eclown  4221      0 Mar 22 20:08 outfile
+-rwxr-xr-x   1 eclown  4221  17404 Mar 22 20:08 pipex
+-rw-r--r--   1 eclown  4221   2072 Mar 22 18:02 pipex.h
