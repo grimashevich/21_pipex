@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fucntions1.c                                       :+:      :+:    :+:   */
+/*   functions1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 20:25:42 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/07 20:25:58 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/23 19:42:49 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	result[s1_len + s2_len] = 0;
 	return (result);
+}
+
+void	error_exit(const char *msg, t_pipex *ppx)
+{
+	if (ppx != NULL)
+		clear_t_pipex(ppx);
+	perror(msg);
+	exit(1);
 }

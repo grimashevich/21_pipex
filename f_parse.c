@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 12:48:18 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/22 18:02:31 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/23 19:29:38 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ int	is_file_executable(char *dir, char *file)
 	if (access(file_path, 1) == 0)
 		result = 1;
 	free(file_path);
-	return result;
+	return (result);
 }
 
-int update_commands2(t_pipex *ppx, t_text *cur_cmd)
+int	update_commands2(t_pipex *ppx, t_text *cur_cmd)
 {
 	char	*tmp;
 	t_str	*cur_path;
@@ -52,14 +52,14 @@ int update_commands2(t_pipex *ppx, t_text *cur_cmd)
 			tmp = cur_cmd->value[0];
 			cur_cmd->value[0] = ft_strjoin(cur_path->value, cur_cmd->value[0]);
 			free(tmp);
-			break;
+			break ;
 		}
 		cur_path = cur_path->next;
 	}
 	return (file_ok);
 }
 
-int update_commands(t_pipex *ppx)
+int	update_commands(t_pipex *ppx)
 {
 	t_text	*cur_cmd;
 
@@ -84,16 +84,16 @@ t_pipex	*get_t_pipex(int argc, char **argv, char **envp)
 	pipex->infile = ft_strdup(argv[1]);
 	pipex->outfile = ft_strdup(argv[argc - 1]);
 	pipex->path = NULL;
+	pipex->commands = NULL;
 	pipex->path = get_path(envp);
+	pipex->infile_fd = 0;
+	pipex->outfile_fd = 0;
 	i = 2;
 	pipex->commands = NULL;
-	while (i < argc -1)
+	while (i < argc - 1)
 		pipex->commands = add_text_to_list(
-			create_text_item(argv[i++]), pipex->commands);
+				create_text_item(argv[i++]), pipex->commands);
 	if (! update_commands(pipex))
-	{
-		clear_t_pipex(pipex);
-		exit(1); //TODO Вывод какой-то ошибки
-	}
+		error_exit("PIPEX: wrong command", pipex);
 	return (pipex);
 }
