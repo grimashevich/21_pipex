@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 11:38:10 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/23 19:42:31 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/26 12:22:12 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,13 @@ typedef struct s_text
 	struct s_text	*next;
 }	t_text;
 
-typedef struct pipex
+typedef struct s_p_fd
+{
+	int				fd[2];
+	struct s_p_fd	*next;
+}	t_p_fd;
+
+typedef struct s_pipex
 {
 	char	*infile;
 	char	*outfile;
@@ -40,6 +46,8 @@ typedef struct pipex
 	t_text	*commands;
 	int		infile_fd;
 	int		outfile_fd;
+	int		commands_count;
+	t_p_fd	*pipes;
 }	t_pipex;
 
 char	*ft_strdup(const char *s1);
@@ -60,6 +68,11 @@ t_text	*add_text_to_list(t_text *new_item, t_text *list_start);
 void	free_text_list(t_text **str_list);
 t_text	*create_text_item(char *value);
 void	error_exit(const char *msg, t_pipex *ppx);
-void	free_str_array(char **arr);	
+void	free_str_array(char **arr);
+void	*clear_pipe_fd_list(t_p_fd *list);
+t_p_fd	*get_pipe_fd_list(int count);
+int		get_fd_in(t_pipex *ppx, int count);
+int		get_fd_out(t_pipex *ppx, int count);
+void	close_pipes_fd(t_pipex *ppx, int exclude1, int exclude2);
 
 #endif

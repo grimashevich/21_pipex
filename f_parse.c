@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 12:48:18 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/23 19:29:38 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/25 18:57:51 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ t_pipex	*get_t_pipex(int argc, char **argv, char **envp)
 	pipex->path = get_path(envp);
 	pipex->infile_fd = 0;
 	pipex->outfile_fd = 0;
+	pipex->commands_count = argc - 3;
 	i = 2;
 	pipex->commands = NULL;
 	while (i < argc - 1)

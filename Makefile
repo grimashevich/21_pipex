@@ -47,10 +47,10 @@ $(OBJ_DIR):
 
 clean:
 	@rm -f $(OBJ) $(DEP) $(OBJ_B) $(DEP_B)
-	# make clean -C libft
+#	make clean -C libft
 
 fclean: clean
 	@rm -f $(NAME) $(NAME_B)
-	# make fclean -C libft
+#	make fclean -C libft
 
 re: fclean all
