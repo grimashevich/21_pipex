@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 12:48:18 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/25 18:57:51 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/28 16:55:58 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,22 @@ int	update_commands2(t_pipex *ppx, t_text *cur_cmd)
 int	update_commands(t_pipex *ppx)
 {
 	t_text	*cur_cmd;
+	int		i;
 
+	i = 0;
 	cur_cmd = ppx->commands;
 	while (cur_cmd)
 	{
+		if (i == 0 && ppx->stop_word != NULL)
+		{
+			cur_cmd = cur_cmd->next;
+			i++;
+			continue;
+		}
 		if (! update_commands2(ppx, cur_cmd))
 			return (0);
 		cur_cmd = cur_cmd->next;
+		i++;
 	}
 	return (1);
 }
@@ -81,6 +90,10 @@ t_pipex	*get_t_pipex(int argc, char **argv, char **envp)
 	pipex = malloc(sizeof(t_pipex));
 	if (! pipex)
 		return (NULL);
+	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
+		pipex->stop_word = argv[2];
+	else
+		pipex->stop_word = NULL;
 	pipex->infile = ft_strdup(argv[1]);
 	pipex->outfile = ft_strdup(argv[argc - 1]);
 	pipex->path = NULL;

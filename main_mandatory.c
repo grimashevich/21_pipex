@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_mandatory.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:07:34 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/23 19:25:37 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/28 19:56:59 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	main(int argc, char **argv, char **envp)
 	int		pipe_fd[2];
 	pid_t	child;
 
-	if (argc < 3)
-		error_exit("PIPEX: arguments count must be >= 3", NULL);
+	if (argc != 5)
+		error_exit("PIPEX: 4 arguments expected", NULL);
 	ppx = get_t_pipex(argc, argv, envp);
 	pipe(pipe_fd);
 	ppx->infile_fd = open(ppx->infile, O_RDONLY);

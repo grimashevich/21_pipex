@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 11:38:10 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/26 12:22:12 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/28 17:36:40 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,15 @@ typedef struct s_p_fd
 
 typedef struct s_pipex
 {
-	char	*infile;
-	char	*outfile;
-	t_str	*path;
-	t_text	*commands;
-	int		infile_fd;
-	int		outfile_fd;
-	int		commands_count;
-	t_p_fd	*pipes;
+	char		*infile;
+	char		*outfile;
+	t_str		*path;
+	t_text		*commands;
+	int			infile_fd;
+	int			outfile_fd;
+	int			commands_count;
+	t_p_fd		*pipes;
+	const char	*stop_word;
 }	t_pipex;
 
 char	*ft_strdup(const char *s1);
@@ -74,5 +75,6 @@ t_p_fd	*get_pipe_fd_list(int count);
 int		get_fd_in(t_pipex *ppx, int count);
 int		get_fd_out(t_pipex *ppx, int count);
 void	close_pipes_fd(t_pipex *ppx, int exclude1, int exclude2);
+void	here_doc(int out_fd, const char *stop_word);
 
 #endif
