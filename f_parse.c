@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 12:48:18 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/28 16:55:58 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/29 20:11:35 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int	update_commands2(t_pipex *ppx, t_text *cur_cmd)
 		}
 		cur_path = cur_path->next;
 	}
+	if (! file_ok)
+		ppx->exit_code = 127;
 	return (file_ok);
 }
 
@@ -74,8 +76,7 @@ int	update_commands(t_pipex *ppx)
 			i++;
 			continue;
 		}
-		if (! update_commands2(ppx, cur_cmd))
-			return (0);
+		update_commands2(ppx, cur_cmd);
 		cur_cmd = cur_cmd->next;
 		i++;
 	}
@@ -102,12 +103,15 @@ t_pipex	*get_t_pipex(int argc, char **argv, char **envp)
 	pipex->infile_fd = 0;
 	pipex->outfile_fd = 0;
 	pipex->commands_count = argc - 3;
+	pipex->exit_code = 0;
+	pipex->tmp_file_name = TMP_FILE_NAME;
+	pipex->tmp_file_fd_wr = -1;
+	pipex->tmp_file_fd_rd = -1;
 	i = 2;
 	pipex->commands = NULL;
 	while (i < argc - 1)
 		pipex->commands = add_text_to_list(
 				create_text_item(argv[i++]), pipex->commands);
-	if (! update_commands(pipex))
-		error_exit("PIPEX: wrong command", pipex);
+	update_commands(pipex);
 	return (pipex);
 }

@@ -21,9 +21,10 @@ OBJ := $(SRC:%.c=$(OBJ_DIR)/%.o)
 DEP := $(OBJ:.o=.d)
 DEP_B := $(OBJ_B:.o=.d)
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus
 
 all:	$(NAME)
+bonus:	$(NAME)
 # bonus:	libft $(NAME_B)
 
 $(NAME): $(OBJ)

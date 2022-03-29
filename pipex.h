@@ -6,12 +6,14 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 11:38:10 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/28 17:36:40 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/29 20:13:56 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
+
+# define TMP_FILE_NAME ".tmp_file"
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -49,6 +51,10 @@ typedef struct s_pipex
 	int			commands_count;
 	t_p_fd		*pipes;
 	const char	*stop_word;
+	int			exit_code;
+	const char	*tmp_file_name;
+	int			tmp_file_fd_wr;
+	int			tmp_file_fd_rd;
 }	t_pipex;
 
 char	*ft_strdup(const char *s1);
@@ -75,6 +81,10 @@ t_p_fd	*get_pipe_fd_list(int count);
 int		get_fd_in(t_pipex *ppx, int count);
 int		get_fd_out(t_pipex *ppx, int count);
 void	close_pipes_fd(t_pipex *ppx, int exclude1, int exclude2);
-void	here_doc(int out_fd, const char *stop_word);
+void	here_doc(const char *stop_word);
+void	ft_putstr_fd(char *s, int fd);
+char	*str_join3(char *str1, char *str2, char *str3);
+void	get_fd(t_pipex *ppx);
+int		is_file_executable(char *dir, char *file);
 
 #endif

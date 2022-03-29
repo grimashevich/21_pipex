@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:07:34 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/28 21:08:47 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/29 21:40:15 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,41 @@ void	child_work(t_pipex *ppx, int pipe_fd[2], char **envp)
 	error_exit("PIPEX CHILD: execve error", ppx);
 }
 
+//TODO Сделать here_doc через файл
+
 void	child_work_bonus(t_pipex *ppx, int count, char **envp)
 {
 	int	n;
+	char	*error_msg;
 
 	int fd_in = get_fd_in(ppx, count);
 	int fd_out = get_fd_out(ppx, count);
 	dup2(fd_in, 0);
 	dup2(fd_out, 1);
 	close_pipes_fd(ppx, -1, -1);
+	if (count == 1 && ppx->stop_word)
+	{
+		here_doc(ppx->stop_word);
+		exit(ppx->exit_code);
+	}
 	n = 1;
 	while (n++ < count)
 		ppx->commands = ppx->commands->next;
+	if (! 
+	is_file_executable("", ppx->commands->value[0]))
+	{
+		error_msg = str_join3("pipex: command not found: ", ppx->commands->value[0], "\n");
+		if (error_msg)
+		{
+			ft_putstr_fd(error_msg, 2);
+			free(error_msg);
+		}
+		exit(127);	
+	}
 	execve(ppx->commands->value[0], ppx->commands->value, envp);
 }
 
-void here_doc(int out_fd, const char *stop_word)
+void here_doc(const char *stop_word)
 {
 	char	*buffer;
 	int		read_len;
@@ -51,9 +70,42 @@ void here_doc(int out_fd, const char *stop_word)
 		if (read_len - 1 == stop_word_len &&
 				ft_strncmp(buffer, stop_word, read_len - 1) == 0)
 			break;
-		write(out_fd, buffer, read_len);
+		write(1, buffer, read_len);
 	}
-	close(out_fd);
+	close(0);
+	close(1);
+}
+
+void wait_children(t_pipex *ppx)
+{
+	int	n;
+	int	i;
+
+	i = 0;
+	if (ppx->stop_word)
+		i = 1;
+	while (i++ < ppx->commands_count)
+		wait(&n);
+}
+
+
+void	get_fd(t_pipex *ppx)
+{
+	if (! ppx->stop_word)
+	{
+		ppx->infile_fd = open(ppx->infile, O_RDONLY);
+		ppx->outfile_fd = open(ppx->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	}
+	else
+	{
+		ppx->infile_fd = dup(0);
+		ppx->outfile_fd = open(ppx->outfile, O_WRONLY | O_CREAT |O_APPEND, 0664);
+		ppx->tmp_file_fd_wr = open(ppx->tmp_file_name,
+				O_WRONLY | O_CREAT | O_TRUNC, 0664); 
+		ppx->tmp_file_fd_rd = open(ppx->tmp_file_name, O_RDONLY, 0664); 
+	}
+	if (ppx->infile_fd == -1 || ppx->outfile_fd == -1)
+		error_exit("PIPEX: file access error", ppx);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -65,57 +117,29 @@ int	main(int argc, char **argv, char **envp)
 	if (argc < 5)
 		error_exit("PIPEX: arguments count must be >= 4", NULL);
 	ppx = get_t_pipex(argc, argv, envp);
-
-	if (! ppx->stop_word)
-		ppx->infile_fd = open(ppx->infile, O_RDONLY);
-	else
-		ppx->infile_fd = dup(0);
-
-	if (ppx->stop_word == NULL)
-		ppx->outfile_fd = open(ppx->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	else
-		ppx->outfile_fd = open(ppx->outfile, O_WRONLY | O_APPEND, 0664);
-
-	if (ppx->infile_fd == -1 || ppx->outfile_fd == -1)
-		error_exit("PIPEX: file access error", ppx);
-	
+	get_fd(ppx);
 	ppx->pipes = get_pipe_fd_list(argc - 4);
 	count = 0;
 	while (count++ < argc - 3)
 	{
-		if (count == 1 && ppx->stop_word)
-			continue;
+/* 		if (count == 1 && ppx->stop_word)
+			continue; */
+		if (count == 2 && ppx->stop_word)
+			wait(NULL);
 		child = fork();
 		if (child == 0)
 			child_work_bonus(ppx, count, envp);
 	}
-	if (ppx->stop_word)
+/* 	if (ppx->stop_word)
 	{
 		dup2(get_fd_in(ppx, 1), 0);
 		dup2(get_fd_out(ppx, 1), 1);
 		here_doc(get_fd_out(ppx, 1), ppx->stop_word);
-	}
+		exit(0);
+	} */
 	close_pipes_fd(ppx, -1, -1);
-	// printf("DONE!\n");
-	exit(0);
-/* 
-	pipe(pipe_fd);
-	ppx->infile_fd = open(ppx->infile, O_RDONLY);
-	ppx->outfile_fd = open(ppx->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	if (ppx->infile_fd == -1 || ppx->outfile_fd == -1)
-		error_exit("PIPEX: file access error", ppx);
-	child = fork();
-	if (child == 0)
-		child_work(ppx, pipe_fd, envp);
-	dup2(pipe_fd[0], 0);
-	dup2(ppx->outfile_fd, 1);
-	close(pipe_fd[1]);
-	close(ppx->outfile_fd);
-	execve(ppx->commands->next->value[0], ppx->commands->next->value, envp);
-	 
-	 ./pipex infile "grep pe" wc outfile
-	 %       4      35     251
-	 
-	 ./pipex here_doc 0 cat wc outfile
-	 */
+	wait_children(ppx);
+	if (ppx->stop_word)
+		unlink(TMP_FILE_NAME);
+	exit(ppx->exit_code);
 }
