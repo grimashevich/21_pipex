@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 11:38:10 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/29 20:13:56 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/31 20:26:28 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define PIPEX_H
 
 # define TMP_FILE_NAME ".tmp_file"
+# define LLI_MIN "9223372036854775808"
+# define LLI_MAX "9223372036854775807"
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -55,10 +57,11 @@ typedef struct s_pipex
 	const char	*tmp_file_name;
 	int			tmp_file_fd_wr;
 	int			tmp_file_fd_rd;
+	pid_t		last_pid;
 }	t_pipex;
 
 char	*ft_strdup(const char *s1);
-int		ft_strlen(const char *s);
+size_t	ft_strlen(const char *s);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	**ft_split(char const *s, char c);
 void	*ft_calloc(size_t count, size_t size);
@@ -86,5 +89,11 @@ void	ft_putstr_fd(char *s, int fd);
 char	*str_join3(char *str1, char *str2, char *str3);
 void	get_fd(t_pipex *ppx);
 int		is_file_executable(char *dir, char *file);
+int		wait_children(t_pipex *ppx);
+int		ft_isdigit(int c);
+int		ft_atoi(const char *str);
+int		ft_isnumeric(char *str);
+void	do_exit_func(char **command);
+
 
 #endif

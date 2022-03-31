@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:07:34 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/29 21:40:15 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/31 21:19:57 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ void	child_work(t_pipex *ppx, int pipe_fd[2], char **envp)
 	execve(ppx->commands->value[0], ppx->commands->value, envp);
 	error_exit("PIPEX CHILD: execve error", ppx);
 }
-
-//TODO Сделать here_doc через файл
 
 void	child_work_bonus(t_pipex *ppx, int count, char **envp)
 {
@@ -42,8 +40,9 @@ void	child_work_bonus(t_pipex *ppx, int count, char **envp)
 	n = 1;
 	while (n++ < count)
 		ppx->commands = ppx->commands->next;
-	if (! 
-	is_file_executable("", ppx->commands->value[0]))
+	if (ft_strncmp(ppx->commands->value[0], "exit", 5) == 0)
+		do_exit_func(ppx->commands->value);
+	if (! is_file_executable("", ppx->commands->value[0]))
 	{
 		error_msg = str_join3("pipex: command not found: ", ppx->commands->value[0], "\n");
 		if (error_msg)
@@ -51,7 +50,7 @@ void	child_work_bonus(t_pipex *ppx, int count, char **envp)
 			ft_putstr_fd(error_msg, 2);
 			free(error_msg);
 		}
-		exit(127);	
+		exit(127);
 	}
 	execve(ppx->commands->value[0], ppx->commands->value, envp);
 }
@@ -76,16 +75,25 @@ void here_doc(const char *stop_word)
 	close(1);
 }
 
-void wait_children(t_pipex *ppx)
+int wait_children(t_pipex *ppx)
 {
 	int	n;
 	int	i;
+	int result;
+	int status;
 
-	i = 0;
+	i = 1;
+	n = 0;
+	result = -1;
 	if (ppx->stop_word)
-		i = 1;
+		i = 2;
+	waitpid(ppx->last_pid, &status, 0);
 	while (i++ < ppx->commands_count)
-		wait(&n);
+		waitpid(0, &n, 0);
+	
+	if (WIFEXITED(status)) 
+		result = WEXITSTATUS(status);
+	return (result);
 }
 
 
@@ -111,7 +119,6 @@ void	get_fd(t_pipex *ppx)
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*ppx;
-	pid_t	child;
 	int		count;
 
 	if (argc < 5)
@@ -120,25 +127,17 @@ int	main(int argc, char **argv, char **envp)
 	get_fd(ppx);
 	ppx->pipes = get_pipe_fd_list(argc - 4);
 	count = 0;
+
 	while (count++ < argc - 3)
 	{
-/* 		if (count == 1 && ppx->stop_word)
-			continue; */
 		if (count == 2 && ppx->stop_word)
 			wait(NULL);
-		child = fork();
-		if (child == 0)
+		ppx->last_pid = fork();
+		if (ppx->last_pid == 0)
 			child_work_bonus(ppx, count, envp);
 	}
-/* 	if (ppx->stop_word)
-	{
-		dup2(get_fd_in(ppx, 1), 0);
-		dup2(get_fd_out(ppx, 1), 1);
-		here_doc(get_fd_out(ppx, 1), ppx->stop_word);
-		exit(0);
-	} */
 	close_pipes_fd(ppx, -1, -1);
-	wait_children(ppx);
+	ppx->exit_code = wait_children(ppx);
 	if (ppx->stop_word)
 		unlink(TMP_FILE_NAME);
 	exit(ppx->exit_code);

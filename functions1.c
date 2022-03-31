@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 20:25:42 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/29 21:07:10 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/31 21:21:07 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,4 +166,52 @@ char	*str_join3(char *str1, char *str2, char *str3)
 	result = ft_strjoin(tmp, str3);
 	free(tmp);
 	return (result);
+}
+
+int	ft_isdigit(int c)
+{
+	return (c >= 48 && c <= 57);
+}
+
+int	ft_isnumeric(char *str)
+{
+	if (str == NULL || *str == 0)
+		return (0);
+	if (*str == '-')
+		str++;
+	while (*str)
+	{
+		if (ft_isdigit(*str) == 0)
+			return (0);
+		str++;
+	}
+	return (1);
+}
+
+void do_exit_func(char **command)
+{
+	char	*err_msg;
+	int		exit_code;
+
+	if (command[1] == NULL)
+		exit(10);
+
+	if (! ft_isnumeric(command[1]))
+	{
+		err_msg = str_join3("pipex: exit: ", command[1], ": numeric argument required");
+		perror(err_msg);
+		free(err_msg);
+		exit(255);
+	}
+
+	if (command[2]!= NULL)
+	{
+		err_msg = ft_strjoin("pipex: ", "exit: too many arguments");
+		perror(err_msg);
+		free(err_msg);
+		exit(1);
+	}
+
+	exit_code = ft_atoi(command[1]) % 256;
+	exit(exit_code);
 }

@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 12:48:18 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/29 20:11:35 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/31 20:26:47 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int	update_commands(t_pipex *ppx)
 	cur_cmd = ppx->commands;
 	while (cur_cmd)
 	{
-		if (i == 0 && ppx->stop_word != NULL)
+		if ((i == 0 && ppx->stop_word != NULL) || 
+				ft_strncmp(cur_cmd->value[0], "exit", 5) == 0)
 		{
 			cur_cmd = cur_cmd->next;
 			i++;
@@ -107,6 +108,7 @@ t_pipex	*get_t_pipex(int argc, char **argv, char **envp)
 	pipex->tmp_file_name = TMP_FILE_NAME;
 	pipex->tmp_file_fd_wr = -1;
 	pipex->tmp_file_fd_rd = -1;
+	pipex->last_pid = 0;
 	i = 2;
 	pipex->commands = NULL;
 	while (i < argc - 1)

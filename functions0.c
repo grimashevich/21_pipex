@@ -6,13 +6,13 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/03 21:39:19 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/07 18:46:44 by EClown           ###   ########.fr       */
+/*   Updated: 2022/03/31 18:45:31 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	ft_strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
 	unsigned int	result;
 
