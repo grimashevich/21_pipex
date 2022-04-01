@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 16:07:34 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/31 21:19:57 by EClown           ###   ########.fr       */
+/*   Updated: 2022/04/01 16:31:44 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	child_work_bonus(t_pipex *ppx, int count, char **envp)
 
 	int fd_in = get_fd_in(ppx, count);
 	int fd_out = get_fd_out(ppx, count);
+	if (fd_out == -1)
+		exit(1);
 	dup2(fd_in, 0);
 	dup2(fd_out, 1);
 	close_pipes_fd(ppx, -1, -1);
@@ -96,24 +98,30 @@ int wait_children(t_pipex *ppx)
 	return (result);
 }
 
+void open_file_error(int fd)
+{
+	if (fd == -1)
+		perror("pipex");
+}
 
 void	get_fd(t_pipex *ppx)
 {
 	if (! ppx->stop_word)
 	{
 		ppx->infile_fd = open(ppx->infile, O_RDONLY);
+		open_file_error(ppx->infile_fd);
 		ppx->outfile_fd = open(ppx->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+		open_file_error(ppx->outfile_fd);
 	}
 	else
 	{
 		ppx->infile_fd = dup(0);
 		ppx->outfile_fd = open(ppx->outfile, O_WRONLY | O_CREAT |O_APPEND, 0664);
+		open_file_error(ppx->outfile_fd);
 		ppx->tmp_file_fd_wr = open(ppx->tmp_file_name,
 				O_WRONLY | O_CREAT | O_TRUNC, 0664); 
 		ppx->tmp_file_fd_rd = open(ppx->tmp_file_name, O_RDONLY, 0664); 
 	}
-	if (ppx->infile_fd == -1 || ppx->outfile_fd == -1)
-		error_exit("PIPEX: file access error", ppx);
 }
 
 int	main(int argc, char **argv, char **envp)
