@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 12:48:18 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/31 20:26:47 by EClown           ###   ########.fr       */
+/*   Updated: 2022/04/02 16:57:16 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,50 +70,16 @@ int	update_commands(t_pipex *ppx)
 	cur_cmd = ppx->commands;
 	while (cur_cmd)
 	{
-		if ((i == 0 && ppx->stop_word != NULL) || 
-				ft_strncmp(cur_cmd->value[0], "exit", 5) == 0)
+		if ((i == 0 && ppx->stop_word != NULL)
+			|| ft_strncmp(cur_cmd->value[0], "exit", 5) == 0)
 		{
 			cur_cmd = cur_cmd->next;
 			i++;
-			continue;
+			continue ;
 		}
 		update_commands2(ppx, cur_cmd);
 		cur_cmd = cur_cmd->next;
 		i++;
 	}
 	return (1);
-}
-
-t_pipex	*get_t_pipex(int argc, char **argv, char **envp)
-{
-	t_pipex	*pipex;
-	int		i;
-
-	pipex = malloc(sizeof(t_pipex));
-	if (! pipex)
-		return (NULL);
-	if (ft_strncmp(argv[1], "here_doc", 9) == 0)
-		pipex->stop_word = argv[2];
-	else
-		pipex->stop_word = NULL;
-	pipex->infile = ft_strdup(argv[1]);
-	pipex->outfile = ft_strdup(argv[argc - 1]);
-	pipex->path = NULL;
-	pipex->commands = NULL;
-	pipex->path = get_path(envp);
-	pipex->infile_fd = 0;
-	pipex->outfile_fd = 0;
-	pipex->commands_count = argc - 3;
-	pipex->exit_code = 0;
-	pipex->tmp_file_name = TMP_FILE_NAME;
-	pipex->tmp_file_fd_wr = -1;
-	pipex->tmp_file_fd_rd = -1;
-	pipex->last_pid = 0;
-	i = 2;
-	pipex->commands = NULL;
-	while (i < argc - 1)
-		pipex->commands = add_text_to_list(
-				create_text_item(argv[i++]), pipex->commands);
-	update_commands(pipex);
-	return (pipex);
 }

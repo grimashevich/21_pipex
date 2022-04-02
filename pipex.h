@@ -6,7 +6,7 @@
 /*   By: EClown <eclown@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 11:38:10 by EClown            #+#    #+#             */
-/*   Updated: 2022/03/31 20:26:28 by EClown           ###   ########.fr       */
+/*   Updated: 2022/04/02 16:34:25 by EClown           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ t_str	*create_str_item(char *value, int need_dup);
 t_str	*add_str_to_list(t_str *new_item, t_str *list_start);
 void	cleat_t_pipex(t_pipex *ppx);
 t_pipex	*get_t_pipex(int argc, char **argv, char **envp);
+void	get_t_pipex2(int argc, char **argv, char **envp, t_pipex *pipex);
 void	clear_t_pipex(t_pipex *ppx);
 char	*ft_strjoin(char const *s1, char const *s2);
 t_text	*add_text_to_list(t_text *new_item, t_text *list_start);
@@ -94,6 +95,10 @@ int		ft_isdigit(int c);
 int		ft_atoi(const char *str);
 int		ft_isnumeric(char *str);
 void	do_exit_func(char **command);
-
+void	my_error(int exit_code, char *s1, char *s2, char *s3);
+void	open_file_error(int fd);
+void	get_fd(t_pipex *ppx);
+int		update_commands2(t_pipex *ppx, t_text *cur_cmd);
+int		update_commands(t_pipex *ppx);
 
 #endif
